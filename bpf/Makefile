@@ -1,6 +1,3 @@
-# Copyright (C) 2021 Intel Corporation
-# SPDX-License-Identifier: Apache-2.0
-
 FLAGS := -O2 -g
 CLANG_FLAGS :=  ${FLAGS} -target bpf -emit-llvm
 LLC_FLAGS   := -march=bpf -mcpu=probe -mattr=dwarfris

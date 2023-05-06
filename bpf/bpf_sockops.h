@@ -1,14 +1,16 @@
-// SPDX-License-Identifier: GPL-2.0
-/* Copyright (C) 2021 Intel Corporation */
+// 如果宏没有定义，则定义AF_INET
 #ifndef AF_INET
 #define AF_INET 2
 #endif
 
+// 如果宏没有定义，则定义AF_INET
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
 
+// 如果宏定义 16 进制
 #define INBOUND_ENVOY_IP 0x600007f
+// 宏定义 SOCKOPS_MAP_SIZE 最大值
 #define SOCKOPS_MAP_SIZE 65535
 
 #include <bpf/bpf_endian.h>
@@ -58,7 +60,7 @@ struct {
         __uint(pinning, LIBBPF_PIN_BY_NAME);
 } map_proxy SEC(".maps");
 
-/* This a sockhash map for sk_msg redirect
+/* This is a sockhash map for sk_msg redirect
 |------------------------------------------------------------------------|
 |  key(local_ip:local_port, remote_ip:remote_port) |     Val(skops)      |
 |------------------------------------------------------------------------|
@@ -94,6 +96,8 @@ struct {
         __uint(pinning, LIBBPF_PIN_BY_NAME);
 } debug_map SEC(".maps");
 
+// 函数内联
+// sk_ops_extract4_key 从 struct bpf_sock_ops *ops（socket metadata）中提取 key
 static __inline__ void sk_ops_extract4_key(struct bpf_sock_ops *ops,
                 struct socket_4_tuple *key)
 {
@@ -103,7 +107,8 @@ static __inline__ void sk_ops_extract4_key(struct bpf_sock_ops *ops,
     key->remote.port = bpf_ntohl(ops->remote_port);
 }
 
-
+// 函数内联
+// sk_msg_extract4_keys 从 struct sk_msg_md *ops（socket metadata）中提取 key
 static __inline__ void sk_msg_extract4_keys(struct sk_msg_md *msg,
                 struct socket_4_tuple *proxy_key, struct socket_4_tuple *key)
 {

@@ -1,10 +1,18 @@
+// 如果宏没有定义，则返回真
 #ifndef __VMLINUX_H__
+/*
+ * 使用 #define 预处理器定义常量 
+ * 定义宏
+*/
 #define __VMLINUX_H__
 /*
  * run the following command in btf supported OS such as ubuntu 21.04 and deleted unused lines
  * bpftool btf dump file /sys/kernel/btf/vmlinux format c > bpf/vmlinux.h
 */
 
+/*
+* typedef 为类型定义新名称
+*/
 typedef unsigned char __u8;
 typedef short int __s16;
 typedef short unsigned int __u16;
@@ -30,6 +38,9 @@ typedef s32 int32_t;
 typedef u32 uint32_t;
 typedef __u32 __wsum;
 
+/*
+ *  使用 enum 定义 bpf_map_type 枚举常量
+*/
 enum bpf_map_type {
         BPF_MAP_TYPE_UNSPEC = 0,
         BPF_MAP_TYPE_HASH = 1,
@@ -63,11 +74,17 @@ enum bpf_map_type {
         BPF_MAP_TYPE_TASK_STORAGE = 29,
 };
 
+/*
+ *  使用 enum 定义 sk_action 枚举常量
+*/
 enum sk_action {
         SK_DROP = 0,
         SK_PASS = 1,
 };
 
+/*
+ *  使用 enum 定义枚举常量
+*/
 enum {
         BPF_ANY = 0,
         BPF_NOEXIST = 1,
@@ -75,10 +92,16 @@ enum {
         BPF_F_LOCK = 4,
 };
 
+/*
+ *  使用 enum 定义枚举常量
+*/
 enum {
         BPF_F_INGRESS = 1,
 };
 
+/*
+ *  使用 enum 定义枚举常量
+*/
 enum {
         BPF_SOCK_OPS_RTO_CB_FLAG = 1,
         BPF_SOCK_OPS_RETRANS_CB_FLAG = 2,
@@ -90,6 +113,9 @@ enum {
         BPF_SOCK_OPS_ALL_CB_FLAGS = 127,
 };
 
+/*
+ *  使用 enum 定义枚举常量
+*/
 enum {
         BPF_SOCK_OPS_VOID = 0,
         BPF_SOCK_OPS_TIMEOUT_INIT = 1,
@@ -109,6 +135,9 @@ enum {
         BPF_SOCK_OPS_WRITE_HDR_OPT_CB = 15,
 };
 
+/*
+ *  使用 enum 定义枚举常量
+*/
 enum {
         BPF_TCP_ESTABLISHED = 1,
         BPF_TCP_SYN_SENT = 2,
@@ -198,4 +227,5 @@ struct sk_msg_md {
         };
 };
 
+// 结束一个 #if……#else 条件编译块
 #endif

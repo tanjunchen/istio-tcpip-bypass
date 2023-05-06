@@ -1,6 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
-/* Copyright (C) 2021 Intel Corporation */
-
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
@@ -11,6 +8,7 @@ static inline void bpf_sock_ops_active_establish_cb(struct bpf_sock_ops *skops) 
 
     sk_ops_extract4_key(skops, &key);
     if (key.local.ip4 == INBOUND_ENVOY_IP) {
+        // 调用 BPF 辅助函数去更新套接字 map
         bpf_sock_hash_update(skops, &map_redir, &key, BPF_ANY);
         return;
     }
@@ -18,8 +16,11 @@ static inline void bpf_sock_ops_active_establish_cb(struct bpf_sock_ops *skops) 
         return;
     }
 
+    // 调用 BPF 辅助函数去更新套接字 map map_active_estab
     /* update map_active_estab*/
     bpf_map_update_elem(&map_active_estab, &key.local, &key.remote, BPF_NOEXIST);
+
+    // 调用 BPF 辅助函数去更新套接字 map map_redir
     /* update map_redir */
     bpf_sock_hash_update(skops, &map_redir, &key, BPF_ANY);
 }
@@ -32,8 +33,10 @@ static inline void bpf_sock_ops_passive_establish_cb(struct bpf_sock_ops *skops)
 
     sk_ops_extract4_key(skops, &key);
     if (key.remote.ip4 == INBOUND_ENVOY_IP) {
+        // 调用 BPF 辅助函数去更新套接字 map map_redir
         bpf_sock_hash_update(skops, &map_redir, &key, BPF_ANY);
     }
+    // 调用 BPF 辅助函数从 bpf_map_lookup_elem 去获取原始地址
     original_dst = bpf_map_lookup_elem(&map_active_estab, &key.remote);
     if (original_dst == NULL) {
         return;
@@ -43,13 +46,17 @@ static inline void bpf_sock_ops_passive_establish_cb(struct bpf_sock_ops *skops)
     proxy_key.remote = *original_dst;
     proxy_val.local = key.local;
     proxy_val.remote = key.remote;
+    // 调用 BPF 辅助函数 key
     bpf_map_update_elem(&map_proxy, &proxy_key, &proxy_val, BPF_ANY);
+    // 调用 BPF 辅助函数 key
     bpf_map_update_elem(&map_proxy, &proxy_val, &proxy_key, BPF_ANY);
 
     /* update map_redir */
+    // 调用 BPF 辅助函数去更新套接字 map map_redir
     bpf_sock_hash_update(skops, &map_redir, &key, BPF_ANY);
 
     /* delete element in map_active_estab*/
+    // 调用 BPF 辅助函数去更新套接字 map map_active_estab
     bpf_map_delete_elem(&map_active_estab, &key.remote);
 }
 
@@ -62,6 +69,7 @@ static inline void bpf_sock_ops_state_cb(struct bpf_sock_ops *skops) {
     bpf_map_delete_elem(&map_active_estab, &key.local);
 }
 
+// 将函数或者变量放在指定段中，可在指定的地方取函数执行
 SEC("sockops")
 int bpf_sockmap(struct bpf_sock_ops *skops)
 {

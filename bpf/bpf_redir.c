@@ -1,6 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
-/* Copyright (C) 2021 Intel Corporation */
-
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_endian.h>
@@ -42,7 +39,6 @@ int bpf_redir_proxy(struct sk_msg_md *msg)
             }
             __sync_fetch_and_add(debug_val_ptr, 1);
             bpf_map_update_elem(&debug_map, &debug_pckts_index, debug_val_ptr, BPF_ANY);
-
         }
     }
     return SK_PASS;

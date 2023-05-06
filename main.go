@@ -1,7 +1,3 @@
-/* Copyright (C) 2021 Intel Corporation
- * SPDX-License-Identifier: Apache-2.0
- */
-
 package main
 
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang -target bpf -cflags "-D__TARGET_ARCH_x86" bpf_redir   bpf/bpf_redir.c
@@ -15,7 +11,7 @@ import (
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
-	v2 "github.com/containers/common/pkg/cgroupv2"
+	"github.com/containers/common/pkg/cgroupv2"
 	"golang.org/x/sys/unix"
 )
 
@@ -50,7 +46,7 @@ func getCgroupPath() (string, error) {
 	var err error = nil
 	cgroupPath := "/sys/fs/cgroup"
 
-	enabled, err := v2.Enabled()
+	enabled, err := cgroupv2.Enabled()
 	if !enabled {
 		cgroupPath = filepath.Join(cgroupPath, "unified")
 	}
