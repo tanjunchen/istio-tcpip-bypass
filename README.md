@@ -57,3 +57,17 @@ docker push docker.io/tanjunchen/tcp-ip-pass-tool:test
 docker build --platform=linux/amd64  --network=host -t registry.baidubce.com/csm/ebpf-tanjunchen:test  -f Dockerfile.local  .
 docker push registry.baidubce.com/csm/ebpf-tanjunchen:test
 ```
+
+请求测试：
+```
+kubectl  exec deployments/wrk -it -- curl -sI 172.16.27.36
+```
+
+开启内核 debug 日志：
+```
+开启：
+sudo bpftool map update id 65(debug_map id)  key hex 0 0 0 0  value hex 1 0 0 0
+
+关闭：
+sudo bpftool map update id 65(debug_map id)  key hex 0 0 0 0  value hex 0 0 0 0
+```

@@ -11,12 +11,19 @@ static inline void bpf_sock_ops_active_establish_cb(struct bpf_sock_ops *skops) 
     sk_ops_extract4_key(skops, &key);
     // 如果本机地址是 Envoy 的自身的地址，则更新 map_redir 并且跳过
     if (key.local.ip4 == INBOUND_ENVOY_IP) {
+        char inbound_key_local_fmt[] = "bpf_sock_ops_active_establish_cb data local ip4 and port [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_local_fmt, sizeof(inbound_key_local_fmt), key.local.ip4, key.local.port);
+
+        char inbound_key_remote_fmt[] = "bpf_sock_ops_active_establish_cb data remote ip4 and port [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_remote_fmt, sizeof(inbound_key_remote_fmt), key.remote.ip4, key.remote.port);
         // 调用 BPF 辅助函数去更新套接字 map
         bpf_sock_hash_update(skops, &map_redir, &key, BPF_ANY);
         return;
     }
     // 如果本机地址与远端地址相等，则跳过
     if (key.local.ip4 == key.remote.ip4) {
+        char inbound_key_local_fmt[] = "bpf_sock_ops_active_establish_cb data key.local.ip4 == key.remote.ip4 [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_local_fmt, sizeof(inbound_key_local_fmt), key.local.ip4, key.local.port);
         return;
     }
 
@@ -40,12 +47,20 @@ static inline void bpf_sock_ops_passive_establish_cb(struct bpf_sock_ops *skops)
     sk_ops_extract4_key(skops, &key);
     // 如果本机地址是 Envoy 的自身的地址，则更新 map_redir 并且跳过
     if (key.remote.ip4 == INBOUND_ENVOY_IP) {
+        char inbound_key_local_fmt[] = "bpf_sock_ops_passive_establish_cb data local ip4 and port [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_local_fmt, sizeof(inbound_key_local_fmt), key.local.ip4, key.local.port);
+
+        char inbound_key_remote_fmt[] = "bpf_sock_ops_passive_establish_cb data remote ip4 and port [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_remote_fmt, sizeof(inbound_key_remote_fmt), key.remote.ip4, key.remote.port);
+
         // 调用 BPF 辅助函数去更新套接字 map map_redir
         bpf_sock_hash_update(skops, &map_redir, &key, BPF_ANY);
     }
     // 调用 BPF 辅助函数从 bpf_map_lookup_elem 去获取原始地址
     original_dst = bpf_map_lookup_elem(&map_active_estab, &key.remote);
     if (original_dst == NULL) {
+        char fmt[] = "original_dst data remote ip4 and port [%x]->[%x]\n";
+        bpf_trace_printk(fmt, sizeof(fmt), key.remote.ip4, key.remote.port);
         return;
     }
     /* update map_proxy */
@@ -70,6 +85,12 @@ static inline void bpf_sock_ops_passive_establish_cb(struct bpf_sock_ops *skops)
 static inline void bpf_sock_ops_state_cb(struct bpf_sock_ops *skops) {
     struct socket_4_tuple key = {};
     sk_ops_extract4_key(skops, &key);
+    char inbound_key_local_fmt[] = "bpf_sock_ops_state_cb data local ip4 and port [%x]->[%x]\n";
+    bpf_trace_printk(inbound_key_local_fmt, sizeof(inbound_key_local_fmt), key.local.ip4, key.local.port);
+
+    char inbound_key_remote_fmt[] = "bpf_sock_ops_state_cb data remote ip4 and port [%x]->[%x]\n";
+    bpf_trace_printk(inbound_key_remote_fmt, sizeof(inbound_key_remote_fmt), key.remote.ip4, key.remote.port);
+
     /* delete elem in map_proxy */
     bpf_map_delete_elem(&map_proxy, &key);
     /* delete elem in map_active_estab */

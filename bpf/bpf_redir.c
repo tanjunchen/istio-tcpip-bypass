@@ -26,10 +26,10 @@ int bpf_redir_proxy(struct sk_msg_md *msg)
         // bpf_trace_printk(inbound_info_fmt, sizeof(inbound_info_fmt), key, key.local.ip4, key.local.port, key.remote.ip4, key.remote.port);
 
         // bpf_trace_printk 在使用时有一些输出参数的限制。比如：参数类型限制、参数个数限制(4-8)、参数大小限制等。
-        char inbound_key_local_fmt[] = "bpf_msg_redirect_hash [%x]->[%x]\n";
+        char inbound_key_local_fmt[] = "bpf_msg_redirect_hash data local ip4 and port [%x]->[%x]\n";
         bpf_trace_printk(inbound_key_local_fmt, sizeof(inbound_key_local_fmt), key.local.ip4, key.local.port);
 
-        char inbound_key_remote_fmt[] = "bpf_msg_redirect_hash [%x]->[%x]\n";
+        char inbound_key_remote_fmt[] = "bpf_msg_redirect_hash data remote ip4 and port [%x]->[%x]\n";
         bpf_trace_printk(inbound_key_remote_fmt, sizeof(inbound_key_remote_fmt), key.remote.ip4, key.remote.port);
         rc = bpf_msg_redirect_hash(msg, &map_redir, &key, BPF_F_INGRESS);
     } else {

@@ -24,7 +24,7 @@ spec:
         - -i
         - -n
         - sleep
-        - "14000"
+        - "140000000"
         command:
         - nsenter
         image: 'registry.baidubce.com/test-stack/node-shell:dev'
