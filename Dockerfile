@@ -1,4 +1,4 @@
-FROM golang:1.17 AS allbuild
+FROM registry.baidubce.com/csm/golang:1.17 AS allbuild
 
 RUN apt-get update && apt-get install -y \
     make \
@@ -16,7 +16,7 @@ RUN go mod download
 RUN go generate && go build -o load-bypass .
 
 
-FROM gcr.io/distroless/static
+FROM registry.baidubce.com/csm/static
 COPY --from=allbuild /go/src/load-bypass /bpf/
 
 WORKDIR /bpf
