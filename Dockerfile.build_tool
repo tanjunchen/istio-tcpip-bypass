@@ -1,0 +1,8 @@
+FROM docker.io/tanjunchen/golang:1.17
+
+RUN apt-get update && apt-get install -y \
+    make \
+    clang \
+    llvm \
+    libbpf-dev \
+    bpftool

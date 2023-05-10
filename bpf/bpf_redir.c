@@ -21,8 +21,16 @@ int bpf_redir_proxy(struct sk_msg_md *msg)
     sk_msg_extract4_keys(msg, &proxy_key, &key);
     if (key.local.ip4 == INBOUND_ENVOY_IP || key.remote.ip4 == INBOUND_ENVOY_IP) {
         // 处理 Inbound 流量
-        char inbound_info_fmt[] = "INBOUND_ENVOY_IP exec bpf_msg_redirect_hash :[%x]=[%x]->[%x], [%x]->[%x]\n";
-        bpf_trace_printk(inbound_info_fmt, sizeof(inbound_info_fmt), key, key.local.ip4, key.local.port, key.remote.ip4, key.remote.port);
+        // 这种写法会报错 bpf/bpf_redir.c:25:9: error: too many args to 0x21a3090: i64 = Constant<6>
+        // char inbound_info_fmt[] = "INBOUND_ENVOY_IP exec bpf_msg_redirect_hash :[%x]=[%x]->[%x], [%x]->[%x]\n";
+        // bpf_trace_printk(inbound_info_fmt, sizeof(inbound_info_fmt), key, key.local.ip4, key.local.port, key.remote.ip4, key.remote.port);
+
+        // bpf_trace_printk 在使用时有一些输出参数的限制。比如：参数类型限制、参数个数限制(4-8)、参数大小限制等。
+        char inbound_key_local_fmt[] = "bpf_msg_redirect_hash [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_local_fmt, sizeof(inbound_key_local_fmt), key.local.ip4, key.local.port);
+
+        char inbound_key_remote_fmt[] = "bpf_msg_redirect_hash [%x]->[%x]\n";
+        bpf_trace_printk(inbound_key_remote_fmt, sizeof(inbound_key_remote_fmt), key.remote.ip4, key.remote.port);
         rc = bpf_msg_redirect_hash(msg, &map_redir, &key, BPF_F_INGRESS);
     } else {
         // 处理 envoy outbound 与同节点(envoy-envoy) 流量

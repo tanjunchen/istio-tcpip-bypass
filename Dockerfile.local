@@ -1,0 +1,14 @@
+FROM docker.io/tanjunchen/tcp-ip-pass-tool:test  AS allbuild
+
+WORKDIR /go/src
+COPY . /go/src/
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn
+RUN go mod download
+RUN go generate && go build -o load-bypass .
+
+FROM docker.io/tanjunchen/distroless-static:latest
+COPY --from=allbuild /go/src/load-bypass /bpf/
+
+WORKDIR /bpf
+ENTRYPOINT ["./load-bypass"]

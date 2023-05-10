@@ -1,6 +1,12 @@
 #ifndef __VMLINUX_H__
 #define __VMLINUX_H__
 
+/*
+本 vmlinux.h 文件是由 bpftool btf dump file /sys/kernel/btf/vmlinux format c > bpf/vmlinux.h 命令生成的。
+Linux ebpf-test 5.8.0-050800-generic #202008022230 SMP Sun Aug 2 22:33:21 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+内核版本下生成的。
+*/
+
 #ifndef BPF_NO_PRESERVE_ACCESS_INDEX
 #pragma clang attribute push (__attribute__((preserve_access_index)), apply_to = record)
 #endif

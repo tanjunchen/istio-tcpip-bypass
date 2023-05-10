@@ -34,7 +34,6 @@ Load eBPF program via setting up a deamonset
 
 Unload eBPF program via destroying Docker container or deamonset
 
-
 ## Debug Log
 
 Enable debug log via modifying the debug MAP
@@ -44,3 +43,17 @@ Enable debug log via modifying the debug MAP
 Read log from kernel tracepipe
 
     $ sudo cat /sys/kernel/debug/tracing/trace_pipe
+
+## 本地调试
+
+构建 tcp-ip-pass 编译工具：
+```
+docker build --platform=linux/amd64 -t docker.io/tanjunchen/tcp-ip-pass-tool:test -f Dockerfile.build_tool .  
+docker push docker.io/tanjunchen/tcp-ip-pass-tool:test
+```
+
+构建 tcp-ip-pass 镜像：
+```
+docker build --platform=linux/amd64  --network=host -t registry.baidubce.com/csm/ebpf-tanjunchen:test  -f Dockerfile.local  .
+docker push registry.baidubce.com/csm/ebpf-tanjunchen:test
+```

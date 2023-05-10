@@ -15,13 +15,6 @@
 */
 
 /*
-本案例中的 vmlinux.h 文件是由 bpftool btf dump file /sys/kernel/btf/vmlinux format c > bpf/vmlinux.h 命令生成的
-demo/vmlinux.h 代码就是在
-Linux ebpf-test 5.8.0-050800-generic #202008022230 SMP Sun Aug 2 22:33:21 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-内核版本下生成的。
-*/
-
-/*
 * typedef 为类型定义新名称
 */
 typedef unsigned char __u8;
