@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-shell-debug
+spec:
+  selector:
+    matchLabels:
+      app: node-shell-debug
+  template:
+    metadata:
+      labels:
+        app: node-shell-debug
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+      containers:
+      - args:
+        - -t
+        - "1"
+        - -m
+        - -u
+        - -i
+        - -n
+        - sleep
+        - "14000"
+        command:
+        - nsenter
+        image: 'registry.baidubce.com/test-stack/node-shell:dev'
+        imagePullPolicy: IfNotPresent
+        name: shell
+        securityContext:
+          privileged: true
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true

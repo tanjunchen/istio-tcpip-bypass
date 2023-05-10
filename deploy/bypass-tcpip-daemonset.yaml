@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: bypass-tcpip
-  namespace: kube-system
   labels:
     k8s-app: bypass-tcpip
 spec:
@@ -13,6 +12,7 @@ spec:
     metadata:
       labels:
         name: bypass-tcpip
+        sidecar.istio.io/inject: "false"
     spec:
       tolerations:
       # this toleration is to have the daemonset runnable on master nodes
@@ -21,7 +21,7 @@ spec:
       #   effect: NoSchedule
       containers:
       - name: bypass-tcpip
-        image: docker.io/tanjunchen/ebpf-tanjunchen:test
+        image: registry.baidubce.com/csm/ebpf-tanjunchen:test
         imagePullPolicy: Always
         securityContext:
           # 特权模式 

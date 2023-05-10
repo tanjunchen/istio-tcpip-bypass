@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /go/src
 COPY . /go/src/
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn
 RUN go mod download
 RUN go generate && go build -o load-bypass .
 
