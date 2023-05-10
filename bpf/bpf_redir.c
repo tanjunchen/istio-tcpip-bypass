@@ -21,6 +21,8 @@ int bpf_redir_proxy(struct sk_msg_md *msg)
     sk_msg_extract4_keys(msg, &proxy_key, &key);
     if (key.local.ip4 == INBOUND_ENVOY_IP || key.remote.ip4 == INBOUND_ENVOY_IP) {
         // 处理 Inbound 流量
+        char inbound_info_fmt[] = "INBOUND_ENVOY_IP exec bpf_msg_redirect_hash :[%x]=[%x]->[%x], [%x]->[%x]\n";
+        bpf_trace_printk(inbound_info_fmt, sizeof(inbound_info_fmt), key, key.local.ip4, key.local.port, key.remote.ip4, key.remote.port);
         rc = bpf_msg_redirect_hash(msg, &map_redir, &key, BPF_F_INGRESS);
     } else {
         // 处理 envoy outbound 与同节点(envoy-envoy) 流量
@@ -51,8 +53,6 @@ int bpf_redir_proxy(struct sk_msg_md *msg)
             __sync_fetch_and_add(debug_val_ptr, 1);
             bpf_map_update_elem(&debug_map, &debug_pckts_index, debug_val_ptr, BPF_ANY);
         }
-        char debug_info[] = "tanjunchen data redirection succeed: [%x]->[%x]\n";
-        bpf_trace_printk(debug_info, sizeof(debug_info), proxy_key.local.ip4, proxy_key.remote.ip4);
     }
     return SK_PASS;
 }
