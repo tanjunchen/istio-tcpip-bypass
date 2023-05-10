@@ -46,6 +46,66 @@ struct {
         __uint(pinning, LIBBPF_PIN_BY_NAME);
 } map_active_estab SEC(".maps");
 
+/*
+sudo bpftool map dump id 72
+[{
+        "key": {
+            "ip4": 973144586,
+            "port": 52280
+        },
+        "value": {
+            "ip4": 375460012,
+            "port": 15012
+        }
+    },{
+        "key": {
+            "ip4": 201435328,
+            "port": 58520
+        },
+        "value": {
+            "ip4": 62341988,
+            "port": 80
+        }
+    },{
+        "key": {
+            "ip4": 201435328,
+            "port": 59134
+        },
+        "value": {
+            "ip4": 184592576,
+            "port": 6443
+        }
+    },{
+        "key": {
+            "ip4": 989921802,
+            "port": 45156
+        },
+        "value": {
+            "ip4": 263209828,
+            "port": 80
+        }
+    },{
+        "key": {
+            "ip4": 201435328,
+            "port": 56136
+        },
+        "value": {
+            "ip4": 62341988,
+            "port": 80
+        }
+    },{
+        "key": {
+            "ip4": 989921802,
+            "port": 39100
+        },
+        "value": {
+            "ip4": 263209828,
+            "port": 80
+        }
+    }
+]
+*/
+
 /* This is a proxy map to store current socket 4-tuple and other side socket 4-tuple
 |-------------------------------------------------------------------------------------------|
 |          key(current socket 4-tuple)        |        Val(other side socket 4-tuple)       |
@@ -54,6 +114,116 @@ struct {
 |-------------------------------------------------------------------------------------------|
 |   127.0.0.1,A-outbound,A-ip:A-app-port      | A-ip:A-app-port,B-cluster-ip,B-cluster-port |
 |-------------------------------------------------------------------------------------------|
+*/
+/*
+sudo bpftool map dump id 64
+[{
+        "key": {
+            "local": {
+                "ip4": 1359020554,
+                "port": 6856
+            },
+            "remote": {
+                "ip4": 1375797770,
+                "port": 80
+            }
+        },
+        "value": {
+            "local": {
+                "ip4": 1375797770,
+                "port": 15006
+            },
+            "remote": {
+                "ip4": 1359020554,
+                "port": 6856
+            }
+        }
+    },{
+        "key": {
+            "local": {
+                "ip4": 1359020554,
+                "port": 34012
+            },
+            "remote": {
+                "ip4": 1375797770,
+                "port": 80
+            }
+        },
+        "value": {
+            "local": {
+                "ip4": 1375797770,
+                "port": 15006
+            },
+            "remote": {
+                "ip4": 1359020554,
+                "port": 34012
+            }
+        }
+    },{
+        "key": {
+            "local": {
+                "ip4": 1375797770,
+                "port": 15006
+            },
+            "remote": {
+                "ip4": 1359020554,
+                "port": 34012
+            }
+        },
+        "value": {
+            "local": {
+                "ip4": 1359020554,
+                "port": 34012
+            },
+            "remote": {
+                "ip4": 1375797770,
+                "port": 80
+            }
+        }
+    },{
+        "key": {
+            "local": {
+                "ip4": 1375797770,
+                "port": 15006
+            },
+            "remote": {
+                "ip4": 1359020554,
+                "port": 6856
+            }
+        },
+        "value": {
+            "local": {
+                "ip4": 1359020554,
+                "port": 6856
+            },
+            "remote": {
+                "ip4": 1375797770,
+                "port": 80
+            }
+        }
+    },{
+        "key": {
+            "local": {
+                "ip4": 201435328,
+                "port": 60752
+            },
+            "remote": {
+                "ip4": 800080740,
+                "port": 1814
+            }
+        },
+        "value": {
+            "local": {
+                "ip4": 956367370,
+                "port": 15021
+            },
+            "remote": {
+                "ip4": 201435328,
+                "port": 60752
+            }
+        }
+    }
+]
 */
 // 用于存储当前套接字的 4 元组（socket 4-tuple）和另一端套接字的 4 元组。
 struct {
@@ -76,6 +246,46 @@ struct {
 |------------------------------------------------------------------------|
 |        B-ip:B-inbound, A-ip:A-envoy-port         |   B-inbound-skops   |    <--- B-inbound passive_estab CB
 |------------------------------------------------------------------------|
+*/
+/*
+sudo bpftool map dump id 69
+key:
+c0 a8 01 0c 7c cf 00 00  c0 a8 00 0b 2b 19 00 00
+value:
+Operation not supported
+key:
+0a 02 01 51 6a 2b 00 00  ac 10 61 16 a4 3a 00 00
+value:
+Operation not supported
+key:
+c0 a8 01 0c 46 8b 00 00  64 43 b7 04 50 00 00 00
+value:
+Operation not supported
+key:
+c0 a8 01 0c 84 a7 00 00  64 43 b7 03 50 00 00 00
+value:
+Operation not supported
+key:
+0a 02 01 3a 38 cc 00 00  ac 10 61 16 a4 3a 00 00
+value:
+Operation not supported
+key:
+0a 02 01 3b 04 c3 00 00  64 43 b0 0f 50 00 00 00
+value:
+Operation not supported
+key:
+c0 a8 01 0c 60 b4 00 00  c0 a8 00 0b 2b 19 00 00
+value:
+Operation not supported
+key:
+0a 02 01 52 e0 72 00 00  ac 10 61 16 a4 3a 00 00
+value:
+Operation not supported
+key:
+0a 02 01 3b c4 ed 00 00  64 43 b0 0f 50 00 00 00
+value:
+Operation not supported
+Found 0 elements
 */
 // 用于 sk_msg 重定向的 sockhash 映射。
 struct {
