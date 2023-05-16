@@ -28,7 +28,7 @@ net/tcp_input.c  tcp_init_transfer
 net/tcp_input.c bpf_skops_established
 include/linux/bpf-cgroup.h BPF_CGROUP_RUN_PROG_SOCK_OPS
 
-## 主动连接 BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
+## 被动连接 BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
 
 socket.c connect
 net/af_inet.c  inet_recvmsg
