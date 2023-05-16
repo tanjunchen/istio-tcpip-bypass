@@ -27,8 +27,8 @@ spec:
         - "140000000"
         command:
         - nsenter
-        image: 'registry.baidubce.com/test-stack/node-shell:dev'
-        imagePullPolicy: IfNotPresent
+        image: docker.io/tanjunchen/node-shell:dev
+        imagePullPolicy: Always
         name: shell
         securityContext:
           privileged: true

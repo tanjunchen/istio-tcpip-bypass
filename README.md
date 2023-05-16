@@ -47,8 +47,8 @@ docker push docker.io/tanjunchen/tcp-ip-pass-tool:test
 
 构建 tcp-ip-pass 镜像
 ```
-docker build --platform=linux/amd64  --network=host -t registry.baidubce.com/csm/ebpf-tanjunchen:test  -f Dockerfile.local  .
-docker push registry.baidubce.com/csm/ebpf-tanjunchen:test
+docker build --platform=linux/amd64  --network=host -t docker.io/tanjunchen/ebpf-tanjunchen:test  -f Dockerfile.local  .
+docker push docker.io/tanjunchen/ebpf-tanjunchen:test
 ```
 
 请求测试

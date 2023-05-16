@@ -7,7 +7,7 @@ metadata:
     role: local
 spec:
   containers:
-    - image: registry.baidubce.com/csm/netperf-latest:latest
+    - image: docker.io/tanjunchen/netperf-latest:latest
       command: ["/bin/sh","-c","netserver -p 4444 -4; iperf3 -s -i 1;"]
       imagePullPolicy: Always
       name: netperf
@@ -64,7 +64,7 @@ metadata:
     role: local
 spec:
   containers:
-    - image: registry.baidubce.com/csm/netperf-latest:latest
+    - image: docker.io/tanjunchen/netperf-latest:latest
       command:
         - sleep
         - "7200"
@@ -110,7 +110,7 @@ spec:
     spec:
       containers:
         - name: netperf-remote
-          image: registry.baidubce.com/csm/netperf-latest:latest
+          image: docker.io/tanjunchen/netperf-latest:latest
           imagePullPolicy: Always
           command: ["/bin/sh","-c","netserver -p 4444 -4; iperf3 -s -i 1;"]
           ports:

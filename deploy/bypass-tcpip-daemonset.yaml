@@ -21,7 +21,7 @@ spec:
       #   effect: NoSchedule
       containers:
       - name: bypass-tcpip
-        image: registry.baidubce.com/csm/ebpf-tanjunchen:test
+        image: docker.io/tanjunchen/ebpf-tanjunchen:test
         imagePullPolicy: Always
         securityContext:
           # 特权模式 
