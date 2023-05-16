@@ -1,5 +1,9 @@
 # 使用 eBPF 加速 Istio
 
+## 测试数据
+
+开启与不开启 eBPF svg 火焰图见 svg 目录。
+
 ## 使用场景
 
 * 注入sidecar的p2p通信
